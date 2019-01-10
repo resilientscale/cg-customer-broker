@@ -10,7 +10,7 @@ A service broker is an application that implements a standard API, the [Open Ser
 
 If you have used anything out of the marketplace in Cloud Foundry, you have interacted with a service broker.  But what if the service you want to use isn't in the marketplace for your Cloud Foundry?
 
-The services you see in the marketplace are likely system-wide; brokers are installed and configured by the administrators of your Cloud Foundry. However, if you are SpaceDeveloper, you can bring your own space scoped broker. This tutorial will show you how to do this.
+The services you see in the marketplace are likely system-wide; brokers are installed and configured by the administrators of your Cloud Foundry. However, if you are SpaceDeveloper, you can bring your own space-scoped broker. This tutorial will show you how to do this.
 
 ## Deploying a Broker as an App
 
@@ -57,7 +57,7 @@ With the broker running, you should be able to query it using a browser. We can 
 
 Service Brokers in Cloud Foundry are protected by basic authentication (i.e. they require a username and password to be supplied). This broker has a default username of `admin` and password of `secret`.
 
-* In a browser, access https://<YOUR-BROKER-ROUTE>/v2/catalog. Supplied the username and password above when prompted. You should see output similar to:
+* In a browser, access https://<YOUR-BROKER-ROUTE>/v2/catalog. Supply the username and password above when prompted. You should see output similar to:
 
   ```
   {
@@ -102,9 +102,9 @@ You will see this broker exposes a single service called `simple-service` which 
 
 > NOTE: Browser extensions such as JSONView (https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc) can be helpful in formatting JSON output such as that returned from service brokers.
 
-## Registering a Space Scoped Broker
+## Registering a Space-Scoped Broker
 
-Once the broker application is running, we can register it as a service broker with Cloud Foundry. If you are a Cloud Foundry admin, you can register a broker and make it available system wide. These brokers are referred to as `standard brokers`. However, if you aren't an admin you can still register a broker within a space provided you have the SpaceDeveloper role. These brokers are referred to as `space scoped brokers`
+Once the broker application is running, we can register it as a service broker with Cloud Foundry. If you are a Cloud Foundry admin, you can register a broker and make it available system wide. These brokers are referred to as `standard brokers`. However, if you aren't an admin you can still register a broker within a space provided you have the SpaceDeveloper role. These brokers are referred to as `space-scoped brokers`
 
 > More information on roles in Cloud Foundry is availble here: https://docs.cloudfoundry.org/concepts/roles.html.
 
@@ -154,7 +154,7 @@ At this point you should see the service offering listed in the marketplace.
 
   ```
 
-  Since the service broker that was just added is a spaced scoped broker, this will only show up in the marketplace if you are targeted at the appropriate space.
+  Since the service broker that was just added is a space-scoped broker, this will only show up in the marketplace if you are targeted at the appropriate space.
 
 If you have the Stratos UI available to you, you can also see the marketplace via Stratos.
 
@@ -167,7 +167,7 @@ The first step in using the broker is to provision an instance of the service, t
 
 ### Provisioning
 
-Provisioning the service asks the broker to create an instance of the service based on a given service plan. Where a service could be the resiliency of the service. i.e. an HA version for production, or a minimal version for development.
+Provisioning the service asks the broker to create an instance of the service based on a given service plan. Where a service plan could be the resiliency of the service. i.e. an HA version for production, or a minimal version for development.
 
 `cf create-service my-service-broker my-ha-service-plan my-service-instance`
 
