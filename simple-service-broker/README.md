@@ -1,15 +1,36 @@
+# Table of Contents
+
+* [What is a Service Broker?](#what-is-a-service-broker)
+* [Deploying a Service Broker as an App](#deploying-a-service-broker-as-an-app)
+  * [Checking Your Work](#checking-deploying-a-service-broker-as-an-app)
+    * [OPTIONAL: Accessing the Catalog](#optional-accessing-the-catalog)
+* [Registering a Space-Scoped Broker](#registering-a-space-scoped-broker)
+  * [Space-Scoped Broker Names](#space-scoped-broker-names)
+    * [Checking Your Work](#checking-space-scoped-broker-name)
+* [Viewing the Marketplace](#viewing-marketplace)
+  * [Viewing the Marketplace in the CLI](#viewing-marketplace-cli)
+  * [Viewing the Marketplace in the Stratos UI](#viewing-marketplace-stratos-ui)
+* [Beyond the Simple Service Broker](#beyond-the-simple-service-broker)
+  * [Using the Same Broker in Another Space](#using-the-same-broker-in-another-space)
+  * [Purging Service Instances](#purging-service-instances)
+    * [Creating and Binding an Instance](#create-binding-instance)
+    * [Purging Service Instances and Bindings](#purging-service-instances-and-bindings)
+* [Beyond the Tutorial](#beyond-the-tutorial)
+  
 # Adding a Simple Service Broker to Cloud Foundry
 
 In this tutorial, we will show you how to deploy a simple service broker to a space in Cloud Foundry and make it available for use via the marketplace.
 
 Before you begin, please be sure you are logged into a Cloud Foundry instance and targeted to an org and space.
 
+<a name="what-is-a-broker"></a>
 ## What is a Service Broker?
 
 A service broker is an application that implements a standard API, the [Open Service Broker API](https://www.openservicebrokerapi.org/). Service brokers hide the complexity of provisioning and configuring the underlying service behind a standard API. In Cloud Foundry terms, this means you can do things like create a database using a standard command `cf create-service`, rather than needing to know how to install and configure the database.
 
 Service brokers are behind all of the services listed in the marketplace. In this tutorial, we will show you how to add your own service broker to the marketplace. The services you see in the marketplace now are likely installed and configured by the administrators of your Cloud Foundry. However, if you are SpaceDeveloper, you can bring your own space-scoped broker. This tutorial will show you how to do this.
 
+<a name="deploying-service-broker-as-app"></a>
 ## Deploying a Service Broker as an App
 
 A service broker is an application that implements a RESTful API, the [Open Service Broker API](https://www.openservicebrokerapi.org/). Brokers can be deployed anywhere as long as the Cloud Foundry instance (specifically the Cloud Controller) can reach it via HTTPS. Because our broker is a stateless app and Cloud Foundry is the best platform for stateless apps, we will deploy our broker as an app to Cloud Foundry.
@@ -44,6 +65,7 @@ A service broker is an application that implements a RESTful API, the [Open Serv
 
 > Note: We are using `random-route` to help prevent route collisions.  You should not use this feature except in development, training or CI/CD scenarios such as this. We do not recommend using `random-route` in production.
 
+<a name="checking-deploying-a-service-broker-as-an-app"></a>
 ### Checking Your Work
 
 You can verify the broker application is running with `cf apps`. You should see output similar to:
@@ -53,6 +75,7 @@ You can verify the broker application is running with `cf apps`. You should see 
   simple-service-broker   started           1/1         128M     256M   simple-service-broker-humble-wallaby.cfapps.io
   ```
 
+<a name="optional-accessing-catalog"></a>
 #### OPTIONAL: Accessing the Catalog
 
 If you have `curl` (or another REST client) installed, you can access the broker's catalog via the `/v2/catalog` endpoint. This is the same endpoint used to populate the marketplace.
@@ -103,12 +126,14 @@ You will see this broker exposes a single service called `simple-service` which 
 
 > NOTE: `jq` (https://stedolan.github.io/jq/) is a very helpful utility that can parse and format JSON output. To view the output of our curl request in a more human friendly format, you can pipe the output of the `curl` into `jq`: `curl -s -u admin -H "X-Broker-API-Version: 2.14" https://<YOUR-BROKER-ROUTE>/v2/catalog | jq`
 
+<a name="registering-a-space-scoped-broker"</a>
 ## Registering a Space-Scoped Broker
 
 Once the broker application is running, we can register it as a service broker with Cloud Foundry. If you are a Cloud Foundry admin, you can register a broker and make it available system wide. These brokers are referred to as `standard brokers`. However, if you aren't an admin you can still register a broker within a space provided you have the `SpaceDeveloper` role. These brokers are referred to as `space-scoped brokers`
 
 > More information on roles in Cloud Foundry is availble here: https://docs.cloudfoundry.org/concepts/roles.html.
 
+<a name="space-scoped-broker-names"></a>
 ### Space-Scoped Broker Names
 
 Service brokers are assigned names in Cloud Foundry. Just like with applications and service instances, these names are only used internally within Cloud Foundry to reference the respective entity. They have no meaning outside of Cloud Foundry. Applications and service instance names are scoped to a space. To illustrate this scope, two different applications could be deployed to two different spaces and both have the same name (such as `my-app`).
@@ -135,6 +160,7 @@ Let's break down the command:
   * `https://<YOUR-BROKER-ROUTE>`: This is the route of your broker prefixed with `https://`.
   * `--space-scoped`: This tells Cloud Foundry to register the broker only within your space. This allows you to add any broker to your space.
 
+<a name="checking-space-scoped-broker-name"></a>
 #### Checking Your Work
 
 At this point, your broker should be registered with Cloud Foundry.  You can check this by running via the `cf service-brokers` command.  You should see output similar to:
@@ -146,12 +172,14 @@ At this point, your broker should be registered with Cloud Foundry.  You can che
   simple-service-broker-18f-integration   https://simple-service-broker-humble-wallaby.cfapps.io
   ```
 
+<a name="viewing-marketplace"></a>
 ## Viewing the Marketplace
 
 At this point, your new service called `simple-service` should show up in the marketplace along side the other services.
 
 > NOTE: Because this is a space-scoped broker, it will only show up in the marketplace in the space or spaces which it is registered.
 
+<a name="viewing-marketplace-cli"></a>
 ### Viewing the Marketplace in the CLI
 
 You can see this via the CLI or using the Stratos UI.
@@ -171,6 +199,7 @@ You can see this via the CLI or using the Stratos UI.
 
 > NOTE: You are seeing the same service and plans as you saw accessing the broker via `curl` above (if you completed that optional portion of the tutorial). This information is populated from the same `/v2/catalog` endpoint.  
 
+<a name="viewing-marketplace-stratos-ui"></a>
 ### Viewing the Marketplace in the Stratos UI
 
 You should also see your service listed in the Stratos UI.
@@ -180,10 +209,12 @@ You should also see your service listed in the Stratos UI.
 ![Stratos Marketplace showing simple-service](img/stratos-marketplace.png "Stratos Marketplace")
 
 
+<a name="beyond-simple-service-broker"></a>
 ## Beyond the Simple Service Broker
 
 At this point, you should be able to create and bind service instances as with any other service in the marketplace. Of course our simple broker isn't really brokering anything as there is no backing service. Therefore our instances aren't terribly useful. But we can use them to practice a few things.
 
+<a name="same-broker-another-space"></a>
 ### Using the Same Broker in Another Space
 
 You can use the same broker in another space without redeploying it. You can simply register the same broker in another space using `cf create-service-broker`.
@@ -219,10 +250,12 @@ You should now have access to the broker in this space.
 
   ```
 
+<a name="purging-service-instances"></a>
 ### Purging Service Instances
 
 While our broker is quite simple, other brokers will bring their own complexity. This is often because each broker will often require specific configuration to connect with the backing services. We can use the simple broker to learn some helpful hints on dealing with more complex brokers.
 
+<a name="create-binding-instance"></a>
 #### Creating and Binding an Instance
 
 First, let's create a service instance. Make sure you are in the space where teh simple-service-broker is deployed, as
@@ -284,6 +317,7 @@ Now, let's bind it. We aren't looking to use the service, so it doesn't matter w
   }
   ```
 
+<a name="purging-service-instances-and-bindings"></a>
 #### Purging Service Instances and Bindings
 
 If you find yourself iterating on broker deployments, it may be helpful at times to purge service instances or bindings. Imagine if your broker became unavailable or returned errors after you had already created service instances or service bindings. The Cloud Foundry database would still have a record of the instances and the bindings. Your attempts to delete them using `cf delete-service` or `cf unbind-service` will fail as the broker won't be available. This is what `cf purge-service-instance` is for.
@@ -355,6 +389,7 @@ If you find yourself iterating on broker deployments, it may be helpful at times
 
 You should only use `purge-service-instance` when `cf unbind-service` and/or `cf delete-service` fail and you cannot fix the broker. Note you may also have to clean up backing resources left behind.
 
+<a name="beyond-tutorial"></a>
 ## Beyond the Tutorial
 
 Eden: https://github.com/starkandwayne/eden
