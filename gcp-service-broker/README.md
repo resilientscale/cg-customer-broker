@@ -1,4 +1,5 @@
 # Table of Contents
+* [Prerequisites](#prerequisites)
 * [GCP Setup](#gcp-setup)
   * [Setup GCP Project](#project)
   * [Enable APIs](#apis)
@@ -12,12 +13,22 @@
   * [Create a Spanner Service](#create-spanner-service)
   * [Deploy Spanner Application](#deploy-spanner-app)
 * [Cleanup](#cleanup)
-    
+ 
+<a name="prerequisites"></a>
+# Prerequisites
+
+* A working knowledge of the [Cloud Foundry CLI](https://docs.cloudfoundry.org/cf-cli/).
+* A working knowledge of Space Scoped Service Brokers. For an excellent introduction, 
+see the [Simple Service Broker Tutorial](https://github.com/resilientscale/cg-customer-broker/tree/master/simple-service-broker)
+* An account to a Cloud Foundry instance. A free account can be established at [Pivotal Web Services](https://run.pivotal.io/).
+* A [Google Cloud Platform (GCP) account](https://accounts.google.com/).
+
+
 <a name="space-scoped-broker"></a>
 # Adding a Space Scoped GCP Service Broker 
 
 This tutorial walks you through the steps of adding a space scoped GCP Service Broker to Cloud Foundry  and 
-then deploys an application that demonstrate how to use the Broker to access the GCP Spanner service.
+then deploys an application that demonstrate how to use the Broker to access the GCP Spanner service. 
 
 Before you begin:
 * please be sure you are logged into a Cloud Foundry instance and targeted to an org and space.
