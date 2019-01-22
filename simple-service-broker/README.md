@@ -16,7 +16,7 @@ A service broker is an application that implements a RESTful API, the [Open Serv
 
 * Download the [simple-service-broker.zip](http://18f.artifacts.rscale.io.s3-website-us-west-2.amazonaws.com/simple-service-broker.zip) and unzip it. Change to the unzipped `simple-service-broker` directory. Inside is a very simple service broker written in Go along with a Cloud Foundry manifest.
 
-* Change to the unzipped directory and use the supplied manifest to deploy the application. We can add the `--random-route` flag to push command to try to prevent route collisions.
+* Change to the unzipped directory and use the supplied manifest to deploy the application. We can add the `--random-route` flag to the push command to try to prevent route collisions.
 
   ```
   $ cf push --random-route
@@ -55,9 +55,9 @@ You can verify the broker application is running with `cf apps`. You should see 
 
 #### OPTIONAL: Accessing the Catalog
 
-OPTIONAL: If you have `curl` (or another REST client) installed, you can access the broker's catalog via the `/v2/catalog` endpoint. This is the same endpoint used to populate the marketplace.
+If you have `curl` (or another REST client) installed, you can access the broker's catalog via the `/v2/catalog` endpoint. This is the same endpoint used to populate the marketplace.
 
-* You can curl your endpoint using `curl -s -u admin -H "X-Broker-API-Version: 2.14" https://<YOUR-BROKER-ROUTE>/v2/catalog`.  You will see output similar to:
+* You can curl your endpoint using `curl -s -u admin -H "X-Broker-API-Version: 2.14" https://<YOUR-BROKER-ROUTE>/v2/catalog`. The password is `secret`. You will see output similar to:
 
   ```
   {
@@ -186,7 +186,7 @@ At this point, you should be able to create and bind service instances as with a
 
 ### Using the Same Broker in Another Space
 
-You can use the same broker in another space without redeploying it. You can simple register the same broker in another space using `cf create-service-broker`.
+You can use the same broker in another space without redeploying it. You can simply register the same broker in another space using `cf create-service-broker`.
 
 Because of the limitation on broker names documented [above](#space-scoped-broker-names), you will need to provide a unique name to the `cf create-service-broker` command. However, if you follow the recommended workaround of adding the org and space, it should all work for you.
 
@@ -225,7 +225,8 @@ While our broker is quite simple, other brokers will bring their own complexity.
 
 #### Creating and Binding an Instance
 
-First, let's create a service instance.  
+First, let's create a service instance. Make sure you are in the space where teh simple-service-broker is deployed, as
+it is used in this portion of the tutorial.
 
 * Use `cf create-service` to create a service instance.
 
@@ -235,7 +236,7 @@ First, let's create a service instance.
   OK
   ```
 
-* We can also use `cf services` to verify we have created an instance:
+* Use `cf services` to verify we have created an instance:
 
   ```
   $ cf services
@@ -255,7 +256,7 @@ Now, let's bind it. We aren't looking to use the service, so it doesn't matter w
 
   While the CLI will prompt you to restage the app, you don't need to do this since the app won't do anything with the service.
 
-* You can optionally see the credentials returned by the simple-service-broker by inspecting the `VCAP_SERVICES` environment variable:
+* You can see the credentials returned by the simple-service-broker by inspecting the `VCAP_SERVICES` environment variable:
 
   ```
   $ cf env simple-service-broker
@@ -321,7 +322,7 @@ If you find yourself iterating on broker deployments, it may be helpful at times
   FAILED
   ```
 
-  Using `cf delete-service` will also fail as the broker is unavailable.
+  Using `cf delete-service simple-service-instance` will also fail as the broker is unavailable.
 
 * If you run `cf services` you will see that Cloud Foundry still has the service instance and binding.
 

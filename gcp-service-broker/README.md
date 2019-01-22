@@ -214,6 +214,9 @@ application and then it'll be ready to start.
 
 The Trades application uses a `random-route` when deploying the application. Take note of the application url.
 
+> Note: We are using `random-route` to help prevent route collisions.  You should not use this feature except in development, 
+training or CI/CD scenarios such as this. We do not recommend using `random-route` in production.
+
 Now you are ready to bind the service to the application. Binding the service adds the required connection information 
 to the application `VCAP_SERVICES` environment variable.
 
